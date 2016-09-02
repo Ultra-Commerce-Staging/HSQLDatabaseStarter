@@ -8,6 +8,31 @@
     <packaging>jar</packaging>
     <name>BroadleafCommerce Database Starter</name>
 
+    <licenses>
+        <license>
+            <name>Broadleaf Fair Use 1.0</name>
+            <url>http://license.broadleafcommerce.org/fair_use_license-1.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>Fair Use Community License</comments>
+        </license>
+        <license>
+            <name>Broadleaf End User License Agreement 1.1</name>
+            <url>http://license.broadleafcommerce.org/commercial_license-1.1.txt</url>
+            <distribution>repo</distribution>
+            <comments>Commercial License Applicable When Bounds of Fair Use License Are Exceeded</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>architect</id>
+            <email>architect@broadleafcommerce.org</email>
+            <organization>Broadleaf Commerce</organization>
+            <organizationUrl>http://www.broadleafcommerce.org</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -15,6 +40,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <broadleaf.bom.version>5.1.0-SNAPSHOT</broadleaf.bom.version>
         <spring.boot.version>1.3.5.RELEASE</spring.boot.version>
+        <project.uri>${project.baseUri}</project.uri>
     </properties>
 
     <scm>
@@ -53,6 +79,52 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.8</version>
+                <configuration>
+                    <verbose>false</verbose>
+                    <addSvnKeyWords>false</addSvnKeyWords>
+                    <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                    <organizationName>Broadleaf Commerce</organizationName>
+                    <inceptionYear>2009</inceptionYear>
+                    <licenseName>blc_dual</licenseName>
+                    <licenseResolver>${project.uri}/licenses</licenseResolver>
+                    <excludes>
+                        <exclude>**/*.sql</exclude>
+                        <exclude>**/*.html</exclude>
+                        <exclude>**/*font-awesome*</exclude>
+                        <exclude>**/*jquery*</exclude>
+                        <exclude>**/*modernizr*</exclude>
+                        <exclude>**/*responsive-tables*</exclude>
+                        <exclude>**/spectrum.css</exclude>
+                        <exclude>**/spectrum.js</exclude>
+                        <exclude>**/redactor.js</exclude>
+                        <exclude>**/fontcolor.js</exclude>
+                        <exclude>**/fontsize.js</exclude>
+                        <exclude>**/typeahead.bundle.js</exclude>
+                        <exclude>**/sitemap/**/*.xml</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>first</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <roots>
+                                <root>src/main</root>
+                                <root>src/test</root>
+                            </roots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencyManagement>
