@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.broadleafcommerce</groupId>
     <artifactId>broadleafcommerce-boot-starter-database</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>5.0.0-BOOT-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>BroadleafCommerce Database Starter</name>
 
@@ -38,7 +38,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <broadleaf.bom.version>5.1.0-SNAPSHOT</broadleaf.bom.version>
+        <broadleaf.bom.version>5.0.0-BOOT-SNAPSHOT</broadleaf.bom.version>
         <spring.boot.version>1.3.5.RELEASE</spring.boot.version>
         <project.uri>${project.baseUri}</project.uri>
     </properties>
