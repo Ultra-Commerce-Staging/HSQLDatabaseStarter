@@ -19,6 +19,7 @@ package com.broadleafcommerce.autoconfigure;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hsqldb.jdbc.JDBCDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -100,6 +101,7 @@ public class DatabaseAutoConfiguration {
             .password("")
             .url("jdbc:hsqldb:hsql://localhost/broadleaf")
             .driverClassName("org.hsqldb.jdbcDriver")
+            .type(JDBCDataSource.class)
             .build();
     }
 
