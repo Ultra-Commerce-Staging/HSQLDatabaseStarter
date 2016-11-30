@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.broadleafcommerce</groupId>
-    <artifactId>broadleafcommerce-boot-starter-database</artifactId>
+    <artifactId>broadleaf-boot-starter-database</artifactId>
     <version>6.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
