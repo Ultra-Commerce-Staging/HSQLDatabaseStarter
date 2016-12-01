@@ -8,7 +8,7 @@
     <version>6.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>BroadleafCommerce Database Starter</name>
+    <name>BroadleafCommerce HSQL Database Starter</name>
     <description>HSQL database starter for Broadleaf Commerce persistence units</description>
 
     <parent>
