@@ -15,7 +15,6 @@
         <groupId>com.broadleafcommerce</groupId>
         <artifactId>broadleaf-boot-starter-parent</artifactId>
         <version>5.2.0-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <licenses>
