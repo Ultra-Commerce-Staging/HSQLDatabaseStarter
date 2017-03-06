@@ -23,14 +23,13 @@ import org.hsqldb.jdbc.JDBCDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
-
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -39,22 +38,15 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableConfigurationProperties(HSQLDBProperties.class)
+@ConditionalOnProperty(prefix = "demo.database", name = "autoConfigEnabled", matchIfMissing = true)
 public class DatabaseAutoConfiguration {
 
     private static final Log LOG = LogFactory.getLog(DatabaseAutoConfiguration.class);
 
-    @Autowired
-    HSQLDBProperties props;
-
-    @ConditionalOnMissingBean(name={"webDS"})
+    @ConditionalOnMissingBean(name="webDS")
     @Bean
-    public HSQLDBServer blEmbeddedDatabase() {
-        Properties inMemoryConfig = new Properties();
-        inMemoryConfig.setProperty("server.database.0", "mem:broadleaf");
-        inMemoryConfig.setProperty("server.dbname.0", "broadleaf");
-        inMemoryConfig.setProperty("server.remote_open", "true");
-        inMemoryConfig.setProperty("hsqldb.reconfig_logging", "false");
-        return new HSQLDBServer(inMemoryConfig, props);
+    public HSQLDBServer blEmbeddedDatabase(@Autowired HSQLDBProperties props) {
+        return new HSQLDBServer(props);
     }
 
     @ConditionalOnMissingBean(name={"webDS"})

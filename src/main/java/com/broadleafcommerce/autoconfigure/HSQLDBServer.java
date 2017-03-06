@@ -25,6 +25,8 @@ import org.hsqldb.server.ServerAcl;
 import org.springframework.context.SmartLifecycle;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.Properties;
 
 /**
@@ -35,34 +37,42 @@ import java.util.Properties;
 public class HSQLDBServer implements SmartLifecycle {
 
     private static final Log LOG = LogFactory.getLog(HSQLDBServer.class);
-    protected HsqlProperties properties;
-    protected HSQLDBProperties autoProps;
+    protected HsqlProperties props;
     protected Server server;
-    protected boolean running = false;
 
-    public HSQLDBServer(Properties props, HSQLDBProperties autoProps) {
-        properties = new HsqlProperties(props);
-        this.autoProps = autoProps;
-        startDB();
+    public HSQLDBServer(HSQLDBProperties autoProps) {
+        Properties databaseConfig = new Properties();
+        databaseConfig.setProperty("server.database.0", "file:" + autoProps.getWorkingDirectory());
+        databaseConfig.setProperty("server.dbname.0", "broadleaf");
+        databaseConfig.setProperty("server.remote_open", "true");
+        databaseConfig.setProperty("hsqldb.reconfig_logging", "false");
+        databaseConfig.setProperty("server.port", Integer.toString(autoProps.getPort()));
+        
+        this.props = new HsqlProperties(databaseConfig);
+        
+        // start on construction since we need this to be active immediately
+        start();
     }
 
     @Override
     public boolean isRunning() {
-        if (server != null) {
-            server.checkRunning(running);
+        try (Socket ignored = new Socket(InetAddress.getByName(null), props.getIntegerProperty("server.port", 0))) {
+            return true;
+        } catch (IOException ignored) {
+            return false;
         }
-        return running;
     }
 
-    public void startDB() {
-        if (server == null && autoProps.getInclude()) {
+    @Override
+    public void start() {
+        // Extra isRunning() check since this is invoked on construction
+        if (server == null && !isRunning()) {
             LOG.info("Starting HSQL server...");
             LOG.warn("HSQL embedded database server is for demonstration purposes only and is not intended for production usage.");
             server = new Server();
             try {
-                server.setProperties(properties);
+                server.setProperties(props);
                 server.start();
-                running = true;
             } catch (ServerAcl.AclFormatException afe) {
                 LOG.error("Error starting HSQL server.", afe);
             } catch (IOException e) {
@@ -72,16 +82,10 @@ public class HSQLDBServer implements SmartLifecycle {
     }
 
     @Override
-    public void start() {
-        //do nothing
-    }
-
-    @Override
     public void stop() {
-        LOG.info("Stopping HSQL server...");
-        if (server != null && autoProps.getInclude()) {
-            server.stop();
-            running = false;
+        if (server != null) {
+            LOG.info("Stopping HSQL server...");
+            server.shutdown();
         }
     }
 

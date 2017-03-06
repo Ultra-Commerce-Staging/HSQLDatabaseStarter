@@ -25,13 +25,31 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("demo.database")
 public class HSQLDBProperties {
 
-    protected Boolean include = true;
+    protected Boolean autoConfigEnabled = true;
+    protected String workingDirectory = System.getProperty("user.dir") + "/.data/broadleaf";
+    protected int port = 9001;
 
-    public Boolean getInclude() {
-        return include;
+    public Boolean getAutoConfigEnabled() {
+        return autoConfigEnabled;
     }
 
-    public void setInclude(Boolean include) {
-        this.include = include;
+    public void setAutoConfigEnabled(Boolean autoConfigEnabled) {
+        this.autoConfigEnabled = autoConfigEnabled;
+    }
+    
+    public String getWorkingDirectory() {
+        return workingDirectory;
+    }
+    
+    public void setWorkingDirectory(String workingDirectory) {
+        this.workingDirectory = workingDirectory;
+    }
+    
+    public int getPort() {
+        return port;
+    }
+    
+    public void setPort(int port) {
+        this.port = port;
     }
 }
