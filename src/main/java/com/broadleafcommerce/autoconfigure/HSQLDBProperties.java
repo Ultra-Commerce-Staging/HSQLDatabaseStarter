@@ -26,7 +26,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class HSQLDBProperties {
 
     protected Boolean autoConfigEnabled = true;
-    protected String workingDirectory = System.getProperty("user.dir") + "/.data/broadleaf";
+    protected String workingDirectory = System.getProperty("java.io.tmpdir") + "/broadleaf-hsqldb/broadleaf";
     protected int port = 9001;
 
     public Boolean getAutoConfigEnabled() {
