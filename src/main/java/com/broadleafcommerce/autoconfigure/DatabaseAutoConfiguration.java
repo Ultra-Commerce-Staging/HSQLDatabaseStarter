@@ -79,7 +79,7 @@ public class DatabaseAutoConfiguration {
     }
 
     @ConditionalOnMissingBean(name={"demoDS"})
-    @ConditionalOnClass(name= "com.broadleafcommerce.privatedemo.core.domain.PDSite")
+    @ConditionalOnClass(name= "com.blcdemo.core.domain.PDSite")
     @DependsOn("blEmbeddedDatabase")
     @Bean
     public DataSource demoDS() {
