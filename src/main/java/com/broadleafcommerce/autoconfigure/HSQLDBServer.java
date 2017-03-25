@@ -42,8 +42,8 @@ public class HSQLDBServer implements SmartLifecycle {
 
     public HSQLDBServer(HSQLDBProperties autoProps) {
         Properties databaseConfig = new Properties();
-        databaseConfig.setProperty("server.database.0", "file:" + autoProps.getWorkingDirectory());
-        databaseConfig.setProperty("server.dbname.0", "broadleaf");
+        databaseConfig.setProperty("server.database.0", "file:" + autoProps.getWorkingDirectory() + autoProps.getDbName());
+        databaseConfig.setProperty("server.dbname.0", autoProps.getDbName());
         databaseConfig.setProperty("server.remote_open", "true");
         databaseConfig.setProperty("hsqldb.reconfig_logging", "false");
         databaseConfig.setProperty("server.port", Integer.toString(autoProps.getPort()));

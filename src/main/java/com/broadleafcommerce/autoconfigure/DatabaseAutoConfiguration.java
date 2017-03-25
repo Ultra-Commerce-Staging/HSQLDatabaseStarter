@@ -43,9 +43,12 @@ public class DatabaseAutoConfiguration {
 
     private static final Log LOG = LogFactory.getLog(DatabaseAutoConfiguration.class);
 
+    @Autowired
+    protected HSQLDBProperties props;
+
     @ConditionalOnMissingBean(name="webDS")
     @Bean
-    public HSQLDBServer blEmbeddedDatabase(@Autowired HSQLDBProperties props) {
+    public HSQLDBServer blEmbeddedDatabase() {
         return new HSQLDBServer(props);
     }
 
@@ -91,7 +94,7 @@ public class DatabaseAutoConfiguration {
             .create()
             .username("SA")
             .password("")
-            .url("jdbc:hsqldb:hsql://localhost/broadleaf")
+            .url("jdbc:hsqldb:hsql://localhost/" + props.getDbName())
             .driverClassName("org.hsqldb.jdbcDriver")
             .type(JDBCDataSource.class)
             .build();
