@@ -47,7 +47,7 @@ public class HSQLDBServer implements SmartLifecycle {
         if (dbFile.exists() && autoProps.getClearPersistedState()) {
             boolean deleted = FileSystemUtils.deleteRecursively(dbFile);
             if (!deleted) {
-                LOG.warn("Unable to clear previous temporary database file. Previous, unwanted values may be utilized during this run.");
+                LOG.warn(String.format("Unable to clear previous temporary database directory (%s). Previous, unwanted values may be utilized during this run.", dbFile.getAbsolutePath()));
             }
         }
         Properties databaseConfig = new Properties();
