@@ -28,6 +28,7 @@ public class HSQLDBProperties {
     protected Boolean autoConfigEnabled = true;
     protected String dbName = "broadleaf";
     protected String workingDirectory = System.getProperty("java.io.tmpdir") + "/broadleaf-hsqldb/";
+    protected Boolean clearPersistedState = true;
     protected int port = 9001;
 
     public Boolean getAutoConfigEnabled() {
@@ -60,5 +61,13 @@ public class HSQLDBProperties {
     
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public Boolean getClearPersistedState() {
+        return clearPersistedState;
+    }
+
+    public void setClearPersistedState(Boolean clearPersistedState) {
+        this.clearPersistedState = clearPersistedState;
     }
 }

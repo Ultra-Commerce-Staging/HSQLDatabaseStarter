@@ -23,7 +23,9 @@ import org.hsqldb.Server;
 import org.hsqldb.persist.HsqlProperties;
 import org.hsqldb.server.ServerAcl;
 import org.springframework.context.SmartLifecycle;
+import org.springframework.util.FileSystemUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -41,6 +43,13 @@ public class HSQLDBServer implements SmartLifecycle {
     protected Server server;
 
     public HSQLDBServer(HSQLDBProperties autoProps) {
+        File dbFile = new File(autoProps.getWorkingDirectory());
+        if (dbFile.exists() && autoProps.getClearPersistedState()) {
+            boolean deleted = FileSystemUtils.deleteRecursively(dbFile);
+            if (!deleted) {
+                LOG.warn("Unable to clear previous temporary database file. Previous, unwanted values may be utilized during this run.");
+            }
+        }
         Properties databaseConfig = new Properties();
         databaseConfig.setProperty("server.database.0", "file:" + autoProps.getWorkingDirectory() + autoProps.getDbName());
         databaseConfig.setProperty("server.dbname.0", autoProps.getDbName());
