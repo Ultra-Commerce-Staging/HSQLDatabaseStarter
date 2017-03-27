@@ -26,6 +26,7 @@ import org.springframework.context.SmartLifecycle;
 import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -42,14 +43,8 @@ public class HSQLDBServer implements SmartLifecycle {
     protected HsqlProperties props;
     protected Server server;
 
-    public HSQLDBServer(HSQLDBProperties autoProps) {
-        File dbFile = new File(autoProps.getWorkingDirectory());
-        if (dbFile.exists() && autoProps.getClearPersistedState()) {
-            boolean deleted = FileSystemUtils.deleteRecursively(dbFile);
-            if (!deleted) {
-                LOG.warn(String.format("Unable to clear previous temporary database directory (%s). Previous, unwanted values may be utilized during this run.", dbFile.getAbsolutePath()));
-            }
-        }
+    public HSQLDBServer(final HSQLDBProperties autoProps) {
+        clearState(autoProps);
         Properties databaseConfig = new Properties();
         databaseConfig.setProperty("server.database.0", "file:" + autoProps.getWorkingDirectory() + autoProps.getDbName());
         databaseConfig.setProperty("server.dbname.0", autoProps.getDbName());
@@ -112,5 +107,23 @@ public class HSQLDBServer implements SmartLifecycle {
     public void stop(Runnable runnable) {
         stop();
         runnable.run();
+    }
+
+    protected void clearState(final HSQLDBProperties autoProps) {
+        File dbFile = new File(autoProps.getWorkingDirectory());
+        if (dbFile.exists() && dbFile.isDirectory() && autoProps.getClearPersistedState()) {
+            File[] myDBContents = dbFile.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.startsWith(autoProps.getDbName() + ".");
+                }
+            });
+            for (File item : myDBContents) {
+                boolean deleted = FileSystemUtils.deleteRecursively(item);
+                if (!deleted) {
+                    LOG.warn(String.format("Unable to clear previous temporary database directory (%s). Previous, unwanted values may be utilized during this run.", item.getAbsolutePath()));
+                }
+            }
+        }
     }
 }
