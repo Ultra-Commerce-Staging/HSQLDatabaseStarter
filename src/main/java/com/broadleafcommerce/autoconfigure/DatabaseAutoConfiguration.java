@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 
@@ -46,10 +47,13 @@ public class DatabaseAutoConfiguration {
     @Autowired
     protected HSQLDBProperties props;
 
+    @Autowired
+    protected Environment environment;
+
     @ConditionalOnMissingBean(name="webDS")
     @Bean
     public HSQLDBServer blEmbeddedDatabase() {
-        return new HSQLDBServer(props);
+        return new HSQLDBServer(props, environment);
     }
 
     @ConditionalOnMissingBean(name={"webDS"})

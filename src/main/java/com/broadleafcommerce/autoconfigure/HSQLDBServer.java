@@ -23,13 +23,16 @@ import org.hsqldb.Server;
 import org.hsqldb.persist.HsqlProperties;
 import org.hsqldb.server.ServerAcl;
 import org.springframework.context.SmartLifecycle;
+import org.springframework.core.env.Environment;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -43,8 +46,8 @@ public class HSQLDBServer implements SmartLifecycle {
     protected HsqlProperties props;
     protected Server server;
 
-    public HSQLDBServer(final HSQLDBProperties autoProps) {
-        clearState(autoProps);
+    public HSQLDBServer(final HSQLDBProperties autoProps, Environment environment) {
+        clearState(autoProps, environment);
         Properties databaseConfig = new Properties();
         databaseConfig.setProperty("server.database.0", "file:" + autoProps.getWorkingDirectory() + autoProps.getDbName());
         databaseConfig.setProperty("server.dbname.0", autoProps.getDbName());
@@ -109,9 +112,31 @@ public class HSQLDBServer implements SmartLifecycle {
         runnable.run();
     }
 
-    protected void clearState(final HSQLDBProperties autoProps) {
+    protected void clearState(final HSQLDBProperties autoProps, Environment environment) {
         File dbFile = new File(autoProps.getWorkingDirectory());
-        if (dbFile.exists() && dbFile.isDirectory() && autoProps.getClearPersistedState()) {
+        boolean isAlwaysClear = autoProps.getAlwaysClearState();
+        boolean isPropertyClear = autoProps.getClearStateOnPropertyOnly();
+        if (isPropertyClear) {
+            if (StringUtils.isEmpty(autoProps.getClearStateProperty())) {
+                LOG.warn("clearStateOnPropertyOnly was set to true, but a clearStateProperty was not defined. Not clearing database state based on the property.");
+                isPropertyClear = false;
+            } else {
+                String propVal = environment.getProperty(autoProps.getClearStateProperty());
+                if (StringUtils.isEmpty(propVal)) {
+                    LOG.warn(String.format("Unable to find the %s property in the Spring environment. Not clearing database state based on the property.", autoProps.getClearStateProperty()));
+                    isPropertyClear = false;
+                } else {
+                    if (!StringUtils.isEmpty(autoProps.getClearStatePropertyValues())) {
+                        String[] vals = autoProps.getClearStatePropertyValues().split(";");
+                        Arrays.sort(vals);
+                        if (Arrays.binarySearch(vals, propVal) < 0) {
+                            isPropertyClear = false;
+                        }
+                    }
+                }
+            }
+        }
+        if (dbFile.exists() && dbFile.isDirectory() && (isAlwaysClear || isPropertyClear)) {
             File[] myDBContents = dbFile.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
