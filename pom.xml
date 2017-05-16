@@ -48,9 +48,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:BroadleafCommerce/DatabaseStarter.git</connection>
-        <developerConnection>scm:git:git@github.com:BroadleafCommerce/DatabaseStarter.git</developerConnection>
-        <url>https://github.com/BroadleafCommerce/DatabaseStarter</url>
+        <connection>scm:git:git@github.com:BroadleafCommerce/HSQLDatabaseStarter.git</connection>
+        <developerConnection>scm:git:git@github.com:BroadleafCommerce/HSQLDatabaseStarter.git</developerConnection>
+        <url>https://github.com/BroadleafCommerce/HSQLDatabaseStarter</url>
         <tag>HEAD</tag>
     </scm>
 
