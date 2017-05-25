@@ -114,29 +114,29 @@ public class HSQLDBServer implements SmartLifecycle {
 
     protected void clearState(final HSQLDBProperties autoProps, Environment environment) {
         File dbFile = new File(autoProps.getWorkingDirectory());
-        boolean isAlwaysClear = autoProps.getAlwaysClearState();
+        boolean clearState = autoProps.getClearState();
         boolean isPropertyClear = autoProps.getClearStateOnPropertyOnly();
         if (isPropertyClear) {
             if (StringUtils.isEmpty(autoProps.getClearStateProperty())) {
                 LOG.warn("clearStateOnPropertyOnly was set to true, but a clearStateProperty was not defined. Not clearing database state based on the property.");
-                isPropertyClear = false;
+                clearState = false;
             } else {
                 String propVal = environment.getProperty(autoProps.getClearStateProperty());
                 if (StringUtils.isEmpty(propVal)) {
                     LOG.warn(String.format("Unable to find the %s property in the Spring environment. Not clearing database state based on the property.", autoProps.getClearStateProperty()));
-                    isPropertyClear = false;
+                    clearState = false;
                 } else {
                     if (!StringUtils.isEmpty(autoProps.getClearStatePropertyValues())) {
                         String[] vals = autoProps.getClearStatePropertyValues().split(";");
                         Arrays.sort(vals);
                         if (Arrays.binarySearch(vals, propVal) < 0) {
-                            isPropertyClear = false;
+                            clearState = false;
                         }
                     }
                 }
             }
         }
-        if (dbFile.exists() && dbFile.isDirectory() && (isAlwaysClear || isPropertyClear)) {
+        if (dbFile.exists() && dbFile.isDirectory() && clearState) {
             File[] myDBContents = dbFile.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
