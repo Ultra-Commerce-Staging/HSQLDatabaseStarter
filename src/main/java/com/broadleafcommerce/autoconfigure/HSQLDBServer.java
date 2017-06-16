@@ -79,6 +79,7 @@ public class HSQLDBServer implements SmartLifecycle {
             server = new Server();
             try {
                 server.setProperties(props);
+                //TODO - do this in a background thread
                 server.start();
             } catch (ServerAcl.AclFormatException afe) {
                 LOG.error("Error starting HSQL server.", afe);
