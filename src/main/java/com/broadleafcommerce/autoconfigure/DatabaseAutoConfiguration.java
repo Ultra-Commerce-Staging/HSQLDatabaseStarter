@@ -19,7 +19,6 @@ package com.broadleafcommerce.autoconfigure;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hsqldb.jdbc.JDBCDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -94,14 +93,16 @@ public class DatabaseAutoConfiguration {
     }
 
     protected DataSource buildDataSource() {
-        return DataSourceBuilder
-            .create()
-            .username("SA")
-            .password("")
-            .url("jdbc:hsqldb:hsql://localhost/" + props.getDbName())
-            .driverClassName("org.hsqldb.jdbcDriver")
-            .type(JDBCDataSource.class)
-            .build();
+        DataSource dataSource = DataSourceBuilder
+                .create()
+                .username("SA")
+                .password("")
+                .url("jdbc:hsqldb:hsql://localhost/" + props.getDbName())
+                .driverClassName("org.hsqldb.jdbcDriver")
+                .type(org.apache.tomcat.jdbc.pool.DataSource.class)
+                .build();
+        ((org.apache.tomcat.jdbc.pool.DataSource) dataSource).setInitSQL("SET DATABASE TRANSACTION CONTROL MVCC");
+        return dataSource;
     }
 
 }

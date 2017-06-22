@@ -43,6 +43,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.boot.version>1.5.4.RELEASE</spring.boot.version>
+        <tomcat.jdbc.version>8.5.14</tomcat.jdbc.version>
         <project.uri>${project.baseUri}</project.uri>
     </properties>
 
@@ -102,6 +103,11 @@
             <!-- Manually overriding scope because module parent
                  declares this as 'test' -->
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat.jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
