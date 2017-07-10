@@ -45,6 +45,7 @@ public class HSQLDBServer implements SmartLifecycle {
     private static final Log LOG = LogFactory.getLog(HSQLDBServer.class);
     protected HsqlProperties props;
     protected Server server;
+    protected Thread serverThread;
 
     public HSQLDBServer(final HSQLDBProperties autoProps, Environment environment) {
         clearState(autoProps, environment);
@@ -79,8 +80,15 @@ public class HSQLDBServer implements SmartLifecycle {
             server = new Server();
             try {
                 server.setProperties(props);
-                //TODO - do this in a background thread
-                server.start();
+                serverThread = new Thread(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        server.start();
+                    }
+                }, "HSQLDB Background Thread");
+                serverThread.setDaemon(true);
+                serverThread.start();
             } catch (ServerAcl.AclFormatException afe) {
                 LOG.error("Error starting HSQL server.", afe);
             } catch (IOException e) {
@@ -91,9 +99,22 @@ public class HSQLDBServer implements SmartLifecycle {
 
     @Override
     public void stop() {
-        if (server != null) {
+        if (server != null && serverThread != null) {
             LOG.info("Stopping HSQL server...");
             server.shutdown();
+            
+            // It is expected that the thread will exit after
+            // the server is shutdown; this will block until
+            // the shutdown is complete.
+            try {
+                serverThread.join(5000);
+                serverThread = null;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                LOG.warn("Interrupted while waiting for embedded HSQLDB to exit");
+                // abandoning the hsqldb thread
+                serverThread = null;
+            }
         }
     }
 
