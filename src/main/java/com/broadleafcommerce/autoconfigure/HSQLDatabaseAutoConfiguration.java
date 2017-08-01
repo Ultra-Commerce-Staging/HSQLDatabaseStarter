@@ -20,6 +20,7 @@ package com.broadleafcommerce.autoconfigure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -39,9 +40,10 @@ import javax.sql.DataSource;
 @Configuration
 @EnableConfigurationProperties(HSQLDBProperties.class)
 @ConditionalOnProperty(prefix = "demo.database", name = "autoConfigEnabled", matchIfMissing = true)
-public class DatabaseAutoConfiguration {
+@AutoConfigureAfter(name = "com.broadleafcommerce.autoconfigure.DatabaseAutoConfiguration")
+public class HSQLDatabaseAutoConfiguration {
 
-    private static final Log LOG = LogFactory.getLog(DatabaseAutoConfiguration.class);
+    private static final Log LOG = LogFactory.getLog(HSQLDatabaseAutoConfiguration.class);
 
     @Autowired
     protected HSQLDBProperties props;
