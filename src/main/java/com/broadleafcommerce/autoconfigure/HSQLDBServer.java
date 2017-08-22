@@ -83,6 +83,7 @@ public class HSQLDBServer implements SmartLifecycle {
                           + "To find out the ID of the process using that port, open a terminal. Then, "
                           + "if on Mac OS or Linux, use `lsof -i :" + port + "`, "
                           + "or, if on Windows, use `netstat -ano | findstr " + port + "`.");
+                isRunning = true;
             } catch (Exception ignored) {
                 // otherwise, it's not in use, yet
                 LOG.info("HSQL server is not running.");
