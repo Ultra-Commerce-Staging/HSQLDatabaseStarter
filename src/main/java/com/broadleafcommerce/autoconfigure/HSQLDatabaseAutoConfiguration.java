@@ -26,6 +26,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -95,16 +96,23 @@ public class HSQLDatabaseAutoConfiguration {
     }
 
     protected DataSource buildDataSource() {
-        DataSource dataSource = DataSourceBuilder
+        DatabaseDriver driver = DatabaseDriver.fromJdbcUrl("jdbc:hsqldb:hsql://127.0.0.1:" + props.getPort() + "/" + props.getDbName());
+        org.apache.tomcat.jdbc.pool.DataSource ds = (org.apache.tomcat.jdbc.pool.DataSource) DataSourceBuilder
                 .create()
                 .username("SA")
                 .password("")
-                .url("jdbc:hsqldb:hsql://127.0.0.1:" + props.getPort() + "/" + props.getDbName())
-                .driverClassName("org.hsqldb.jdbcDriver")
+                .driverClassName(driver.getDriverClassName())
                 .type(org.apache.tomcat.jdbc.pool.DataSource.class)
                 .build();
-        ((org.apache.tomcat.jdbc.pool.DataSource) dataSource).setInitSQL("SET DATABASE TRANSACTION CONTROL MVCC");
-        return dataSource;
+        
+        String validationQuery = driver.getValidationQuery();
+        if (validationQuery != null) {
+            ds.setTestOnBorrow(true);
+            ds.setValidationQuery(validationQuery);
+        }
+        
+        ds.setInitSQL("SET DATABASE TRANSACTION CONTROL MVCC");
+        return ds;
     }
 
 }
