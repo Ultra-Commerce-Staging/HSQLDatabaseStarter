@@ -96,11 +96,13 @@ public class HSQLDatabaseAutoConfiguration {
     }
 
     protected DataSource buildDataSource() {
-        DatabaseDriver driver = DatabaseDriver.fromJdbcUrl("jdbc:hsqldb:hsql://127.0.0.1:" + props.getPort() + "/" + props.getDbName());
+        String url = "jdbc:hsqldb:hsql://127.0.0.1:" + props.getPort() + "/" + props.getDbName();
+        DatabaseDriver driver = DatabaseDriver.fromJdbcUrl(url);
         org.apache.tomcat.jdbc.pool.DataSource ds = (org.apache.tomcat.jdbc.pool.DataSource) DataSourceBuilder
                 .create()
                 .username("SA")
                 .password("")
+                .url(url)
                 .driverClassName(driver.getDriverClassName())
                 .type(org.apache.tomcat.jdbc.pool.DataSource.class)
                 .build();
