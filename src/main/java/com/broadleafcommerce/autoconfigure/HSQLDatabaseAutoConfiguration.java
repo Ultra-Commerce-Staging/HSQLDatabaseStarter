@@ -10,7 +10,7 @@
  * the Broadleaf End User License Agreement (EULA), Version 1.1
  * (the "Commercial License" located at http://license.broadleafcommerce.org/commercial_license-1.1.txt)
  * shall apply.
- * 
+ *
  * Alternatively, the Commercial License may be replaced with a mutually agreed upon license (the "Custom License")
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
@@ -24,8 +24,8 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -98,7 +98,7 @@ public class HSQLDatabaseAutoConfiguration {
     protected DataSource buildDataSource() {
         String url = "jdbc:hsqldb:hsql://127.0.0.1:" + props.getPort() + "/" + props.getDbName();
         DatabaseDriver driver = DatabaseDriver.fromJdbcUrl(url);
-        org.apache.tomcat.jdbc.pool.DataSource ds = (org.apache.tomcat.jdbc.pool.DataSource) DataSourceBuilder
+        org.apache.tomcat.jdbc.pool.DataSource ds = DataSourceBuilder
                 .create()
                 .username("SA")
                 .password("")
@@ -106,13 +106,13 @@ public class HSQLDatabaseAutoConfiguration {
                 .driverClassName(driver.getDriverClassName())
                 .type(org.apache.tomcat.jdbc.pool.DataSource.class)
                 .build();
-        
+
         String validationQuery = driver.getValidationQuery();
         if (validationQuery != null) {
             ds.setTestOnBorrow(true);
             ds.setValidationQuery(validationQuery);
         }
-        
+
         ds.setInitSQL("SET DATABASE TRANSACTION CONTROL MVCC");
         return ds;
     }
