@@ -17,8 +17,6 @@
  */
 package com.broadleafcommerce.autoconfigure;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -33,18 +31,15 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import javax.sql.DataSource;
 
-/**
- * @author Jeff Fischer
- */
 @Configuration
 @EnableConfigurationProperties(HSQLDBProperties.class)
 @ConditionalOnProperty(prefix = "demo.database", name = "autoConfigEnabled", matchIfMissing = true)
 @AutoConfigureAfter(name = "com.broadleafcommerce.autoconfigure.DatabaseAutoConfiguration")
 public class HSQLDatabaseAutoConfiguration {
-
-    private static final Log LOG = LogFactory.getLog(HSQLDatabaseAutoConfiguration.class);
 
     @Autowired
     protected HSQLDBProperties props;
@@ -52,17 +47,17 @@ public class HSQLDatabaseAutoConfiguration {
     @Autowired
     protected Environment environment;
 
-    @ConditionalOnMissingBean(name="webDS")
+    @ConditionalOnMissingBean(name={"blDS","webDS"})
     @Bean
     public HSQLDBServer blEmbeddedDatabase() {
         return new HSQLDBServer(props, environment);
     }
 
-    @ConditionalOnMissingBean(name={"webDS"})
+    @ConditionalOnMissingBean(name={"blDS","webDS"})
     @DependsOn("blEmbeddedDatabase")
     @Bean
     @Primary
-    public DataSource webDS() {
+    public DataSource blDS() {
         return buildDataSource();
     }
 
@@ -98,22 +93,20 @@ public class HSQLDatabaseAutoConfiguration {
     protected DataSource buildDataSource() {
         String url = "jdbc:hsqldb:hsql://127.0.0.1:" + props.getPort() + "/" + props.getDbName();
         DatabaseDriver driver = DatabaseDriver.fromJdbcUrl(url);
-        org.apache.tomcat.jdbc.pool.DataSource ds = DataSourceBuilder
+        HikariDataSource ds = DataSourceBuilder
                 .create()
                 .username("SA")
                 .password("")
                 .url(url)
                 .driverClassName(driver.getDriverClassName())
-                .type(org.apache.tomcat.jdbc.pool.DataSource.class)
+                .type(HikariDataSource.class)
                 .build();
 
         String validationQuery = driver.getValidationQuery();
         if (validationQuery != null) {
-            ds.setTestOnBorrow(true);
-            ds.setValidationQuery(validationQuery);
+            ds.setConnectionTestQuery(validationQuery);
         }
-
-        ds.setInitSQL("SET DATABASE TRANSACTION CONTROL MVCC");
+        ds.setConnectionInitSql("SET DATABASE TRANSACTION CONTROL MVCC");
         return ds;
     }
 
