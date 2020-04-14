@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.broadleafcommerce</groupId>
     <artifactId>broadleaf-boot-starter-hsql-database</artifactId>
-    <version>1.0.3-GA</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>BroadleafCommerce HSQLDB Database Starter</name>
     <description>HSQL database starter for Broadleaf Commerce persistence units</description>
@@ -51,7 +51,7 @@
         <connection>scm:git:git@github.com:BroadleafCommerce/HSQLDatabaseStarter.git</connection>
         <developerConnection>scm:git:git@github.com:BroadleafCommerce/HSQLDatabaseStarter.git</developerConnection>
         <url>https://github.com/BroadleafCommerce/HSQLDatabaseStarter</url>
-        <tag>broadleaf-boot-starter-hsql-database-1.0.3-GA</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <repositories>
