@@ -5,7 +5,7 @@
     <version>2.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>UltraCommerce HSQLDB Database Starter</name>
-    <description>HSQL database starter for Broadleaf Commerce persistence units</description>
+    <description>HSQL database starter for UltraCommerce Commerce persistence units</description>
     
     <parent>
         <groupId>com.ultracommerce</groupId>
