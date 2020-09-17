@@ -1,21 +1,21 @@
 /*
  * #%L
- * BroadleafCommerce Database Starter
+ * UltraCommerce Database Starter
  * %%
- * Copyright (C) 2009 - 2016 Broadleaf Commerce
+ * Copyright (C) 2009 - 2016 Ultra Commerce
  * %%
  * Licensed under the Broadleaf Fair Use License Agreement, Version 1.0
- * (the "Fair Use License" located  at http://license.broadleafcommerce.org/fair_use_license-1.0.txt)
+ * (the "Fair Use License" located  at http://license.ultracommerce.org/fair_use_license-1.0.txt)
  * unless the restrictions on use therein are violated and require payment to Broadleaf in which case
  * the Broadleaf End User License Agreement (EULA), Version 1.1
- * (the "Commercial License" located at http://license.broadleafcommerce.org/commercial_license-1.1.txt)
+ * (the "Commercial License" located at http://license.ultracommerce.org/commercial_license-1.1.txt)
  * shall apply.
  * 
  * Alternatively, the Commercial License may be replaced with a mutually agreed upon license (the "Custom License")
- * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
+ * between you and Ultra Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.autoconfigure;
+package com.ultracommerce.autoconfigure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -34,12 +34,12 @@ public class HSQLDBProperties {
     /**
      * The name of the database to create
      */
-    protected String dbName = "broadleaf";
+    protected String dbName = "ultracommerce";
     /**
      * The working directory in the local file system where the database related files will be stored, ending in a trailing
      * slash
      */
-    protected String workingDirectory = (System.getProperty("java.io.tmpdir") + File.separator + "broadleaf-hsqldb" + File.separator).replace("//", "/").replace("\\/", "\\");
+    protected String workingDirectory = (System.getProperty("java.io.tmpdir") + File.separator + "ultracommerce-hsqldb" + File.separator).replace("//", "/").replace("\\/", "\\");
     /**
      * Whether or not any database related files stored in the file system are wiped before launch. This guarantees a fresh environment.
      */
@@ -51,7 +51,7 @@ public class HSQLDBProperties {
     /**
      * Used in conjunction with "clearStateOnPropertyOnly", defines the Spring environment property to check.
      */
-    protected String clearStateProperty = "blPU.hibernate.hbm2ddl.auto";
+    protected String clearStateProperty = "ucPU.hibernate.hbm2ddl.auto";
     /**
      * Used in conjunction with "clearStateOnPropertyOnly", defines the value(s) [semicolon delimited] that the "clearStateProperty" should be equal to to satisfy the condition. Leaving this property empty signifies that any value for the property is accepted.
      */
