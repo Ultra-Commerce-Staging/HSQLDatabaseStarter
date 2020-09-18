@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ultracommerce</groupId>
     <artifactId>ultracommerce-boot-starter-hsql-database</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.0.2-GA</version>
     <packaging>jar</packaging>
     <name>UltraCommerce HSQLDB Database Starter</name>
     <description>HSQL database starter for UltraCommerce Commerce persistence units</description>
@@ -29,7 +29,7 @@
         <connection>scm:git:git@github.com:Ultra-Commerce-Staging/HSQLDatabaseStarter.git</connection>
         <developerConnection>scm:git:git@github.com:Ultra-Commerce-Staging/HSQLDatabaseStarter.git</developerConnection>
         <url>https://github.com/Ultra-Commerce-Staging/HSQLDatabaseStarter</url>
-        <tag>HEAD</tag>
+        <tag>ultracommerce-boot-starter-hsql-database-2.0.2-GA</tag>
     </scm>
 
     <repositories>
